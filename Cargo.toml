@@ -1,0 +1,18 @@
+[package]
+name = "dynlibs"
+version = "0.1.0"
+authors = ["Michael Graf"]
+
+[lib]
+name = "dynlibs"
+src = "src/lib.rs"
+
+[dependencies]
+errors = { git = "https://github.com/bitminded/rs-errors.git" }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+glibc = { git = "https://github.com/bitminded/rs-glibc.git" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi_kernel32 = { git = "https://github.com/bitminded/rs-winapi-kernel32.git" }
+winapi_typedefs = { git = "https://github.com/bitminded/rs-winapi-typedefs.git" }
