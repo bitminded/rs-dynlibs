@@ -14,5 +14,5 @@ errors = { git = "https://github.com/bitminded/rs-errors.git" }
 glibc = { git = "https://github.com/bitminded/rs-glibc.git" }
 
 [target.'cfg(target_os = "windows")'.dependencies]
-winapi_kernel32 = { git = "https://github.com/bitminded/rs-winapi-kernel32.git" }
-winapi_typedefs = { git = "https://github.com/bitminded/rs-winapi-typedefs.git" }
+winapi_kernel32 = { package = "winapi-kernel32", git = "https://github.com/bitminded/rs-winapi-kernel32.git" }
+winapi_typedefs = { package = "winapi-typedefs", git = "https://github.com/bitminded/rs-winapi-typedefs.git" }
