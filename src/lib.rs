@@ -4,66 +4,61 @@ use std::error::Error;
 use std::fmt;
 
 #[derive(Debug)]
-pub struct LibraryInterfaceCreationError
-{
+pub struct LibraryInterfaceCreationError {
     msg: String,
-    side: Option<Box<dyn Error>>
+    side: Option<Box<dyn Error>>,
 }
 
-impl Error for LibraryInterfaceCreationError
-{
-    fn source(&self) -> Option<&(dyn Error + 'static )>
-    {
-        match &self.side
-        {
-            None =>
-            {
-                None
-            },
-            Some(side) =>
-            {
-                Some(side.as_ref())
-            }
+impl Error for LibraryInterfaceCreationError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match &self.side {
+            None => None,
+            Some(side) => Some(side.as_ref()),
         }
     }
 }
 
-impl fmt::Display for LibraryInterfaceCreationError
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
-    {
-        write!(f, "Unable to create library interface.")
+impl fmt::Display for LibraryInterfaceCreationError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "LibraryInterfaceCreationError: {}: {:?}",
+            self.msg, self.side
+        )
     }
 }
 
 #[derive(Debug)]
-pub struct LibraryFunctionLoadingError
-{
-    side: Box<dyn Error>
+pub struct LibraryFunctionLoadingError {
+    msg: String,
+    side: Option<Box<dyn Error>>,
 }
 
-impl Error for LibraryFunctionLoadingError
-{
-    fn source(&self) -> Option<&(dyn Error + 'static )>
-    {
-        Some(self.side.as_ref())
+impl Error for LibraryFunctionLoadingError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match &self.side {
+            None => None,
+            Some(side) => Some(side.as_ref()),
+        }
     }
 }
 
-impl fmt::Display for LibraryFunctionLoadingError
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
-    {
-        write!(f, "Unable to load function from library.")
+impl fmt::Display for LibraryFunctionLoadingError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "LibraryFunctionLoadingError: {}: {:?}",
+            self.msg, self.side
+        )
     }
 }
 
-pub trait LibraryInterfaceLike
-{
-    fn get_function(&self, name: &str) -> Result<extern fn(), LibraryFunctionLoadingError>;
+pub trait LibraryInterfaceLike {
+    fn get_function(&self, name: &str) -> Result<extern "C" fn(), LibraryFunctionLoadingError>;
 }
 
-type FnCreateLibraryInterface = fn(name: &str) -> Result<Box<dyn LibraryInterfaceLike>, LibraryInterfaceCreationError>;
+type FnCreateLibraryInterface =
+    fn(name: &str) -> Result<Box<dyn LibraryInterfaceLike>, LibraryInterfaceCreationError>;
 
 #[cfg(target_os = "windows")]
 mod win32;
